@@ -4,26 +4,29 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'Bcore/**'
-      - 'black-reflection/**'
-      - 'compiler/**'
-      - 'build.gradle'
-      - 'settings.gradle'
-      - 'gradle/**'
+      - 'NewBlackbox/Bcore/**'
+      - 'NewBlackbox/black-reflection/**'
+      - 'NewBlackbox/compiler/**'
+      - 'NewBlackbox/build.gradle'
+      - 'NewBlackbox/settings.gradle'
+      - 'NewBlackbox/gradle/**'
       - '.github/workflows/build-bcore-aar.yml'
   pull_request:
     paths:
-      - 'Bcore/**'
-      - 'black-reflection/**'
-      - 'compiler/**'
-      - 'build.gradle'
-      - 'settings.gradle'
-      - 'gradle/**'
+      - 'NewBlackbox/Bcore/**'
+      - 'NewBlackbox/black-reflection/**'
+      - 'NewBlackbox/compiler/**'
+      - 'NewBlackbox/build.gradle'
+      - 'NewBlackbox/settings.gradle'
+      - 'NewBlackbox/gradle/**'
       - '.github/workflows/build-bcore-aar.yml'
 
 jobs:
   build-aar:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: NewBlackbox
 
     steps:
       - name: Checkout
@@ -60,7 +63,7 @@ jobs:
         with:
           name: bcore-aar
           path: |
-            Bcore/build/outputs/aar/*.aar
-            Bcore/build/outputs/aar/*.zip
-            Bcore/build/outputs/aar/aar-details.json
+            NewBlackbox/Bcore/build/outputs/aar/*.aar
+            NewBlackbox/Bcore/build/outputs/aar/*.zip
+            NewBlackbox/Bcore/build/outputs/aar/aar-details.json
           if-no-files-found: error
