@@ -1,0 +1,61 @@
+name: Build Bcore AAR
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Bcore/**'
+      - 'black-reflection/**'
+      - 'compiler/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+      - '.github/workflows/build-bcore-aar.yml'
+  pull_request:
+    paths:
+      - 'Bcore/**'
+      - 'black-reflection/**'
+      - 'compiler/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+      - '.github/workflows/build-bcore-aar.yml'
+
+jobs:
+  build-aar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept SDK licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Install required NDK version
+        run: sdkmanager "ndk;29.0.13846066"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Bcore AAR
+        run: ./gradlew :Bcore:assembleRelease --stacktrace
+
+      - name: Upload AAR artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bcore-aar
+          path: |
+            Bcore/build/outputs/aar/*.aar
+            Bcore/build/outputs/aar/*.zip
+            Bcore/build/outputs/aar/aar-details.json
+          if-no-files-found: error
